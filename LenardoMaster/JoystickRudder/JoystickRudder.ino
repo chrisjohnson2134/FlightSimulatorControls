@@ -9,8 +9,8 @@
 
 //dynamic struct
 struct dynamicButtons {
-  char address;
-  char btnInput;
+  short address;
+  short btnInput;
   bool state;
 };
 
@@ -28,6 +28,7 @@ void setup() {
 
   Wire.begin();        // join i2c bus (address optional for master)
 
+  while(!Serial);
   setupButtonMap();
   
   }
@@ -39,40 +40,54 @@ void loop() {
 
 //    Joystick.setButton(2,messageData.buttons & (1));
 //    Joystick.setButton(3,messageData.buttons & (1 << 1));
-
-  Serial.println("request1");
-
-  Wire.requestFrom(8, sizeof refMessage);
-  while (Wire.available()) { // slave may send less than requested
-     Wire.readBytes((byte *) &refMessage,sizeof refMessage); // receive a byte as character
-  }
-  Serial.println(refMessage.buttons);
-  
-   delay(1000);
-  
+//  Serial.println(messageData[1].buttons);
+  delay(2000);
   Joystick.sendState();
     
 }
 
-void setupButtonMap(){
-  int i = 1,j = 0,btnPosition = 0;
-
-  for(i =  1; i <= 10; i++)//create timeout to get up to X devices
+//Get all the Values from each of the controllers.
+void PollDevices()
+{
+  int i = 0;
+  for(i =  1; i < 10; i++)//create timeout to get up to X devices
   {
-    for(j = 0; j < 32; j++)
-    {
-      Wire.requestFrom(i, sizeof refMessage);
+    Wire.requestFrom(i, sizeof refMessage);
       while (Wire.available()) { // slave may send less than requested
         Wire.readBytes((byte *) &refMessage,sizeof refMessage); // receive a byte as character
-      }
-      
-      if(refMessage.buttons & (1 << j))
+     }
+    messageData[i] = refMessage;
+  }
+}
+
+//loop through dataMessages and set Joystick Buttons based off messages.
+void SetButtonsJoystick()
+{
+  
+}
+
+//in the intial state the controller buttons will have how many buttons that it has,
+//expressed in binary form 0x11 = 2 buttons. It will map each button of the device,
+//to a dynamic list that will store the address of the device and the button input.
+void setupButtonMap(){
+  int i = 1,j = 0,btnPosition = 0;
+  
+  PollDevices();
+  
+  for(i =  1; i < 10; i++)//create timeout to get up to X devices
+  {
+    Serial.print("addr : ");
+    Serial.println(i);
+    
+    for(j = j; j < 32; j++)
+    {
+      if(messageData[i].buttons & (1 << j))
       {
         buttonLocationArr[j].address = i;
         buttonLocationArr[j].btnInput = btnPosition;
         btnPosition++;
-        messageData[0] = refMessage;
-        Serial.println(messageData[0].buttons);
+        Serial.println(messageData[i].buttons);
+        messageData[i].buttons = 0;
       }
       else
       {
