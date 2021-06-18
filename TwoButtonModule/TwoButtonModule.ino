@@ -9,7 +9,7 @@ void setup() {
   Wire.onRequest(requestEvent); 
   Serial.begin(9600);
   messageData.status = 2;
-  messageData.buttons = 3; //number of buttons on device (binary) 0x11 ,2 btns
+  messageData.numButtons = 2; //number of buttons on device (binary) 0x11 ,2 btns
   pinMode(2, INPUT);
   pinMode(4, INPUT);
   Serial.println("Startup Complete");
@@ -22,8 +22,8 @@ void loop() {
     
   int a = digitalRead(2);
   int b = digitalRead(3);
-//  messageData.buttons = a;
-//  messageData.buttons |= b << 1;
+  messageData.buttons = a;
+  messageData.buttons |= b << 1;
 //  Serial.println(messageData.buttons);
 }
 

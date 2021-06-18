@@ -3,11 +3,12 @@
 
 struct dataMessage {
 	unsigned char status;
+	unsigned short numButtons;
 	unsigned int buttons;
 	short xAxis;
 	short yAxis;
 	short zAxis;
-	char hatDirection;
+	unsigned char hatDirection;
 };
 
 struct updateMessage {

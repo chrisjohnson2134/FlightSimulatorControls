@@ -3,10 +3,11 @@
 
 struct dataMessage {
 	unsigned char status;
+	unsigned short numButtons;
 	unsigned int buttons;
-	unsigned short xAxis;
-	unsigned short yAxis;
-	unsigned short zAxis;
+	short xAxis;
+	short yAxis;
+	short zAxis;
 	unsigned char hatDirection;
 };
 
