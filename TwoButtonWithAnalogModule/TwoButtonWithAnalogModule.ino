@@ -5,7 +5,7 @@ dataMessage messageData;
 bool intiated = false;
 
 void setup() {
-  Wire.begin(3);                
+  Wire.begin(4);                
   Wire.onRequest(requestEvent); 
   Serial.begin(9600);
   messageData.status = 2;
@@ -24,6 +24,8 @@ void loop() {
   int b = digitalRead(3);
   messageData.buttons = a;
   messageData.buttons |= b << 1;
+  messageData.zAxis = analogRead(A1);
+  Serial.println(messageData.zAxis);
 //  Serial.println(messageData.buttons);
 }
 

@@ -45,6 +45,7 @@ void PollDevices()
       Wire.readBytes((byte *) &refMessage, sizeof refMessage); // receive a byte as character
     }
     messageData[i] = refMessage;
+    refMessage = (dataMessage){};
   }
 }
 
